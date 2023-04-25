@@ -1,10 +1,10 @@
-import './formInput.styles.scss'
+import './form-input.styles.scss'
 
 const FormInput = ({ label, ...inputProps }) => {
     return (
         <div className='group'>
 
-            <input className='form-input' {...inputProps} />
+            <input className='form-input' autoComplete="none" {...inputProps} />
             {label && (
                 <label className={`${inputProps.value.length ? 'shrink' : ''} form-input-label`}>{label}</label>
             )}

@@ -1,7 +1,7 @@
 
 import './home.styles.scss'
 
-import CategoryContainer from '../../components/category-container/categoryContainer.component';
+import CategoryContainer from '../../components/category-container/category-container.component';
 
 const Home = () => {
 

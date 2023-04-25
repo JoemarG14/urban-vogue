@@ -1,10 +1,10 @@
 import { useState } from "react";
 import validator from "validator";
 
-import './signUpForm.styles.scss'
+import './sign-up-form.styles.scss'
 
-import { signInWithEmailAndPassword, createUserFromAuth } from '../../utils/firebase/firebase.utils'
-import FormInput from "../form-input/formInput.component";
+import { signUpWithEmailAndPassword, createUserFromAuth } from '../../utils/firebase/firebase.utils'
+import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
 
 const defaultFormFields = {
@@ -14,7 +14,7 @@ const defaultFormFields = {
     confirmPassword: ''
 };
 
-const SignUp = () => {
+const SignUpForm = () => {
 
     const [formFields, setFormFields] = useState(defaultFormFields);
     const { displayName, email, password, confirmPassword } = formFields;
@@ -35,7 +35,7 @@ const SignUp = () => {
         if(password === confirmPassword) {
             try {
 
-                const { user } = await signInWithEmailAndPassword(email, password);
+                const { user } = await signUpWithEmailAndPassword(email, password);
                 await createUserFromAuth(user, {displayName});
                 resetFormFields();
 
@@ -119,4 +119,4 @@ const SignUp = () => {
     )
 }
 
-export default SignUp;
+export default SignUpForm;
