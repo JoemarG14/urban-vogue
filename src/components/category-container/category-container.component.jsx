@@ -1,7 +1,7 @@
 
-import './categoryContainer.styles.scss'
+import './category-container.styles.scss'
 
-import CategoryItem from '../category-item/categoryItem.component';
+import CategoryItem from '../category-item/category-item.component';
 
 const CategoryContainer = ({categories}) => (
     <div className='categories-container'>

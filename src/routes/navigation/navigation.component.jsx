@@ -1,11 +1,23 @@
 
-import { Outlet, Link } from "react-router-dom";
-import { Fragment } from "react";
+import { Outlet, Link, useNavigate } from "react-router-dom";
+import { Fragment, useContext } from "react";
+
+import { signOutUser } from "../../utils/firebase/firebase.utils";
+import { UserContext } from "../../contexts/user.context";
 
 import './navigation.styles.scss'
 import { ReactComponent as UrbanLogo } from '../../assets/logo.svg'
 
 const Navigation = () => {
+
+    const { userInfo } = useContext(UserContext);
+    const navigate = useNavigate();
+
+    const signOuthandler = async () => {
+        await signOutUser();
+        navigate('/auth');
+    }
+
     return (
         <Fragment>
             <div className="navigation">
@@ -19,9 +31,17 @@ const Navigation = () => {
                     <Link className="nav-link" to='/shop'>
                         CONTACT
                     </Link>
-                    <Link className="nav-link" to='/shop'>
-                        SIGN IN
-                    </Link>
+                    {
+                        userInfo ? (
+                            <span className="nav-link" onClick={signOuthandler}>
+                                SIGN OUT
+                            </span>
+                        ) : (
+                            <Link className="nav-link" to='/auth'>
+                                SIGN IN
+                            </Link>
+                        )
+                    }
                 </div>
             </div>
             
