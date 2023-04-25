@@ -1,15 +1,13 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Button from "../button/button.component";
 import FormInput from "../form-input/form-input.component";
-import { UserContext } from "../../contexts/user.context";
 import './sign-in-form.styles.scss'
 
 import { ReactComponent as GoogleLogo } from '../../assets/google_logo.svg'
 import { 
     signInWithGooglePopup, 
-    createUserFromAuth,
     signInUserWithEmailAndPassword
  } from '../../utils/firebase/firebase.utils'
 
@@ -24,11 +22,9 @@ const SignInForm = ()  => {
     const { email, password } = formFields;
     const navigate = useNavigate();
 
-    const { userInfo, setUserInfo } = useContext(UserContext);
-
     const loginWithGoogle = async () => {
-        const { user } = await signInWithGooglePopup();
-        await createUserFromAuth(user);
+        await signInWithGooglePopup();
+        navigate('/');
     }
 
     const resetFormFields = () => {
@@ -44,10 +40,9 @@ const SignInForm = ()  => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const { user } = await signInUserWithEmailAndPassword(email, password);
-            setUserInfo(user);
+            await signInUserWithEmailAndPassword(email, password);
             resetFormFields();
-            navigate('/', { replace: true });
+            navigate('/');
         } catch (err) {
             switch (err.code) {
                 case 'auth/wrong-password':

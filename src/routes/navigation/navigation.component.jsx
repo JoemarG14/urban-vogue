@@ -10,13 +10,12 @@ import { ReactComponent as UrbanLogo } from '../../assets/logo.svg'
 
 const Navigation = () => {
 
-    const { userInfo, setUserInfo } = useContext(UserContext);
+    const { userInfo } = useContext(UserContext);
     const navigate = useNavigate();
 
     const signOuthandler = async () => {
         await signOutUser();
-        setUserInfo(null);
-        navigate('/', { replace: true });
+        navigate('/auth');
     }
 
     return (
