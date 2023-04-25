@@ -1,11 +1,12 @@
-import { useState } from "react";
-import validator from "validator";
+import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 import './sign-up-form.styles.scss'
 
 import { signUpWithEmailAndPassword, createUserFromAuth } from '../../utils/firebase/firebase.utils'
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
+import { UserContext } from "../../contexts/user.context";
 
 const defaultFormFields = {
     displayName: '',
@@ -18,6 +19,8 @@ const SignUpForm = () => {
 
     const [formFields, setFormFields] = useState(defaultFormFields);
     const { displayName, email, password, confirmPassword } = formFields;
+    const { setUserInfo } = useContext(UserContext);
+    const navigate = useNavigate();
 
     const resetFormFields = () => {
         setFormFields(defaultFormFields);
@@ -36,8 +39,12 @@ const SignUpForm = () => {
             try {
 
                 const { user } = await signUpWithEmailAndPassword(email, password);
+
+                setUserInfo(user);
+
                 await createUserFromAuth(user, {displayName});
                 resetFormFields();
+                navigate('/', { replace: true });
 
             } catch (err) {
 
