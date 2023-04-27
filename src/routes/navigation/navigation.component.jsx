@@ -4,13 +4,17 @@ import { Fragment, useContext } from "react";
 
 import { signOutUser } from "../../utils/firebase/firebase.utils";
 import { UserContext } from "../../contexts/user.context";
+import { CartContext } from '../../contexts/cart.context';
 
 import './navigation.styles.scss'
 import { ReactComponent as UrbanLogo } from '../../assets/logo.svg'
+import CartIcon from "../../components/cart-icon/cart-icon.component";
+import CartDropDown from "../../components/cart-dropdown/cart-dropdown.component";
 
 const Navigation = () => {
 
     const { userInfo } = useContext(UserContext);
+    const { isOpen } = useContext(CartContext);
     const navigate = useNavigate();
 
     const signOuthandler = async () => {
@@ -33,9 +37,12 @@ const Navigation = () => {
                     </Link>
                     {
                         userInfo ? (
-                            <span className="nav-link" onClick={signOuthandler}>
-                                SIGN OUT
-                            </span>
+                            <Fragment>
+                                <span className="nav-link" onClick={signOuthandler}>
+                                    SIGN OUT
+                                </span>
+                                <CartIcon/>
+                            </Fragment>
                         ) : (
                             <Link className="nav-link" to='/auth'>
                                 SIGN IN
@@ -43,8 +50,8 @@ const Navigation = () => {
                         )
                     }
                 </div>
+                { isOpen && <CartDropDown/> }
             </div>
-            
             <Outlet/>
         </Fragment>
     )

@@ -3,6 +3,8 @@ body {
   font-family: 'Sofia Sans Condensed', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  padding: 20px 40px;
+  user-select: none;
 }
 
 code {
