@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import './sign-up-form.styles.scss'
 
@@ -36,20 +37,37 @@ const SignUpForm = () => {
         if(password === confirmPassword) {
             try {
 
-                const { user } = await signUpWithEmailAndPassword(email, password);
-
-                await createUserFromAuth(user, {displayName});
-                resetFormFields();
-                navigate('/');
+                toast.promise(
+                    async () => { 
+                        const { user } = await signUpWithEmailAndPassword(email, password);
+                        return await createUserFromAuth(user, {displayName}); 
+                    },
+                    {
+                        pending: 'Creating account',
+                        success: {
+                          render(){
+                              navigate('/');
+                              resetFormFields();
+                              return 'Account successfully created';
+                          }
+                        },
+                        error: {
+                            render({data}){
+                                switch (data.code) {
+                                    case 'auth/email-already-in-use':
+                                        return 'Email is already registered.'
+                                    default:
+                                        console.log(data.message);
+                                }
+                            }
+                        }
+                    }, {
+                        position: toast.POSITION.BOTTOM_RIGHT
+                    }
+                )
 
             } catch (err) {
-
-                if (err.code === 'auth/email-already-in-use') {
-                    alert('Email is already registered.');
-                } else {
-                    console.log('Encountered an error while saving the account.', err);
-                }
-                
+                console.log('Encountered an error while saving the account.', err);
             }
             
         } else {

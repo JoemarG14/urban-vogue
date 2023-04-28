@@ -14,25 +14,26 @@ import CartDropDown from "../../components/cart-dropdown/cart-dropdown.component
 const Navigation = () => {
 
     const { userInfo } = useContext(UserContext);
-    const { isOpen } = useContext(CartContext);
+    const { isOpen, closeCartPopUp } = useContext(CartContext);
     const navigate = useNavigate();
 
     const signOuthandler = async () => {
         await signOutUser();
         navigate('/auth');
+        closeCartPopUp();
     }
 
     return (
         <Fragment>
             <div className="navigation">
-                <Link className="logo-container" to='/'>
+                <Link className="logo-container" to='/' onClick={closeCartPopUp}>
                     <UrbanLogo className="logo"/>
                 </Link>
                 <div className="nav-links-container">
-                    <Link className="nav-link" to='/shop'>
+                    <Link className="nav-link" to='/shop' onClick={closeCartPopUp}>
                         SHOP
                     </Link>
-                    <Link className="nav-link" to='/shop'>
+                    <Link className="nav-link" to='/shop' onClick={closeCartPopUp}>
                         CONTACT
                     </Link>
                     {

@@ -31,6 +31,14 @@
 
   button {
     margin-top: auto;
+    width: 100%;
+  }
+
+  .empty-cart {
+    text-align: center;
+    opacity: 0.5;
+    margin-top: 30%;
+    font-size: 25px;
   }
 }
 
