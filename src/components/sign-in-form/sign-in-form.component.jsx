@@ -1,17 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import Button from "../button/button.component";
+import Button, { BUTTON_TYPE } from "../button/button.component";
 import FormInput from "../form-input/form-input.component";
 
-import { ReactComponent as GoogleLogo } from '../../assets/google_logo.svg'
 import { toast } from 'react-toastify';
 import { 
     signInWithGooglePopup, 
     signInUserWithEmailAndPassword
  } from '../../utils/firebase/firebase.utils'
 
-import './sign-in-form.styles.scss'
+import { SignInContainer, SignInButtonsContainer, GoogleLogo } from './sign-in-form.styles'
 import 'react-toastify/dist/ReactToastify.css';
 
 const defaultFormFields = {
@@ -93,7 +92,7 @@ const SignInForm = ()  => {
     }
 
     return (
-        <div className="sign-in-container">
+        <SignInContainer>
             <h2>Already have an account?</h2>
             <span>Sign in with your email and password</span>
             <form onSubmit={handleSubmit}>
@@ -116,15 +115,15 @@ const SignInForm = ()  => {
                     onChange={handleChange}
                     required />
 
-                <div className="buttons-container">
+                <SignInButtonsContainer>
                     <Button type="submit">Sign In</Button>
-                    <Button type="button" buttonType='google' onClick={loginWithGoogle}>
-                        <GoogleLogo className='google-logo'/>Sign in with Google
+                    <Button type="button" buttonType={BUTTON_TYPE.google} onClick={loginWithGoogle}>
+                        <GoogleLogo />Sign in with Google
                     </Button>
-                </div>
+                </SignInButtonsContainer>
 
             </form>
-        </div>
+        </SignInContainer>
     )
 }
 
