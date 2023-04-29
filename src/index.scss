@@ -21,6 +21,7 @@ code {
 a {
   text-decoration: none;
   color: black;
+  width: fit-content;
 }
 
 * {
@@ -37,6 +38,6 @@ a {
 }
 
 .toast-message-error {
-  background: red !important;
+  background: #E34234 !important;
   color: #fff !important;
 }

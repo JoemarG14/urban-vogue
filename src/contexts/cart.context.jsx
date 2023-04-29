@@ -1,7 +1,9 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useContext} from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
+import { UserContext } from "./user.context";
 
 const addItem = (cartItems, productToAdd) => {
 
@@ -63,6 +65,9 @@ export const CartContext = createContext({
 });
 
 export const CartProvider = ({children}) => {
+    const { userInfo } = useContext(UserContext);
+    const navigate = useNavigate();
+
     const [isOpen, setIsOpen] = useState(false);
     const [cartItems, setCartItems] = useState([]);
     const [cartCount, setCartCount] = useState(0);
@@ -79,9 +84,17 @@ export const CartProvider = ({children}) => {
     }, [cartItems])
 
     const addItemToCart = (productToAdd, method = '') => {
-        setCartItems(addItem(cartItems, productToAdd));
-        if(method !== 'INC')
-            toastAddedToCart(productToAdd.name);
+        if (userInfo) {
+            setCartItems(addItem(cartItems, productToAdd));
+            if(method !== 'INC')
+                toastAddedToCart(productToAdd.name);
+        } else {
+            toast('Sign in first to add items to your cart.', {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 3000
+            });
+            navigate('/auth');
+        }
     }
 
     const decreaseQuantityFromCart = (productId) => {

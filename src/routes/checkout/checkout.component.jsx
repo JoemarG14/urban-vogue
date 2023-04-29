@@ -1,4 +1,10 @@
-import './checkout.styles.scss'
+import { 
+    CheckoutContainer, 
+    CheckoutHeader, 
+    CheckoutHeaderBlock, 
+    CheckoutTotal, 
+    CheckoutEmptyMessage 
+} from './checkout.styles'
 
 import { useContext } from 'react';
 import { CartContext } from '../../contexts/cart.context';
@@ -8,14 +14,14 @@ const Checkout = () => {
     const { cartItems, total } = useContext(CartContext);
 
     return (
-        <div className='checkout-container'>
-            <div className='checkout-header'>
-                <span className='header-block'>Product</span>
-                <span className='header-block'>Description</span>
-                <span className='header-block'>Quantity</span>
-                <span className='header-block'>Price</span>
-                <span className='header-block'>Remove</span>
-            </div>
+        <CheckoutContainer>
+            <CheckoutHeader>
+                <CheckoutHeaderBlock> Product </CheckoutHeaderBlock>
+                <CheckoutHeaderBlock> Description </CheckoutHeaderBlock>
+                <CheckoutHeaderBlock> Quantity </CheckoutHeaderBlock>
+                <CheckoutHeaderBlock> Price </CheckoutHeaderBlock>
+                <CheckoutHeaderBlock> Remove </CheckoutHeaderBlock>
+            </CheckoutHeader>
             {
                 cartItems.map((item) => (
                     <CheckoutItem key={item.id} item={item} />
@@ -24,16 +30,16 @@ const Checkout = () => {
             {
                 total !== 0 
                 ? (
-                    <div className='total'>
+                    <CheckoutTotal>
                         {`Total: $${total}`}
-                    </div>
+                    </CheckoutTotal>
                 ) : (
-                    <div className='empty-checkout-cart'>
+                    <CheckoutEmptyMessage>
                         Your Cart is Currently Empty!
-                    </div>
+                    </CheckoutEmptyMessage>
                 )
             }
-        </div>
+        </CheckoutContainer>
     )
 }
 

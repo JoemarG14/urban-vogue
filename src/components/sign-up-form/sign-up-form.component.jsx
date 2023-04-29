@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import './sign-up-form.styles.scss'
+import { SignUpContainer } from './sign-up-form.styles'
 
 import { signUpWithEmailAndPassword, createUserFromAuth } from '../../utils/firebase/firebase.utils'
 import FormInput from "../form-input/form-input.component";
@@ -93,7 +93,7 @@ const SignUpForm = () => {
     // }
 
     return (
-        <div className="sign-up-container">
+        <SignUpContainer>
             <h2>Don't have an account?</h2>
             <span>Sign up with your email and password</span>
             <form onSubmit={handleSubmit}>
@@ -136,7 +136,7 @@ const SignUpForm = () => {
                 <Button type="submit">Register</Button>
 
             </form>
-        </div>
+        </SignUpContainer>
     )
 }
 
