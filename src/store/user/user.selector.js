@@ -1,0 +1,1 @@
+export const selectorUserInfo = (state) => state.user.userInfo;

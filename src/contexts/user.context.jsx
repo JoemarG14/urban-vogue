@@ -7,7 +7,7 @@ export const UserContext = createContext({
     setUserInfo: () => null
 });
 
-export const USER_ACTIONS = {
+export const USER_TYPES = {
     SET_USER_INFO: 'SET_USER_INFO'
 }
 
@@ -19,7 +19,7 @@ const userReducer = (state, action) => {
     const {type, payload} = action;
 
     switch (type) {
-        case USER_ACTIONS.SET_USER_INFO:
+        case USER_TYPES.SET_USER_INFO:
             return {
                 ...state,
                 userInfo: payload
@@ -33,7 +33,7 @@ export const UserProvider = ({children}) => {
     // const [userInfo, setUserInfo] = useState(null);
     const [{userInfo}, dispatch] = useReducer(userReducer, INITIAL_STATE);
 
-    const setUserInfo = (user) => (dispatch(createAction(USER_ACTIONS.SET_USER_INFO, user)));
+    const setUserInfo = (user) => (dispatch(createAction(USER_TYPES.SET_USER_INFO, user)));
 
     const value = {userInfo, setUserInfo};
 

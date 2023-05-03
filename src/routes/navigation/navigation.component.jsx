@@ -1,9 +1,9 @@
 
 import { Outlet, useNavigate } from "react-router-dom";
 import { Fragment, useContext } from "react";
+import { useSelector } from "react-redux";
 
 import { signOutUser } from "../../utils/firebase/firebase.utils";
-import { UserContext } from "../../contexts/user.context";
 import { CartContext } from '../../contexts/cart.context';
 
 import {
@@ -16,10 +16,11 @@ import {
 
 import CartIcon from "../../components/cart-icon/cart-icon.component";
 import CartDropDown from "../../components/cart-dropdown/cart-dropdown.component";
+import { selectorUserInfo } from "../../store/user/user.selector";
 
 const Navigation = () => {
 
-    const { userInfo } = useContext(UserContext);
+    const userInfo = useSelector(selectorUserInfo);
     const { isOpen, closeCartPopUp } = useContext(CartContext);
     const navigate = useNavigate();
 

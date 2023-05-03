@@ -5,6 +5,8 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { UserContext } from "./user.context";
 import { createAction } from '../utils/reducer/reducer.utils'
+import { useSelector } from "react-redux";
+import { selectorUserInfo } from "../store/user/user.selector";
 
 export const CartContext = createContext({
     isOpen: false,
@@ -97,7 +99,7 @@ const toastAddedToCart = (name) => {
 };
 
 export const CartProvider = ({children}) => {
-    const { userInfo } = useContext(UserContext);
+    const userInfo = useSelector(selectorUserInfo);
     const navigate = useNavigate();
 
     const [{isOpen, cartItems, cartCount, total}, dispatch] = useReducer(cartReducer, INITIAL_STATE);

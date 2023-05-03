@@ -1,15 +1,40 @@
 import { Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import { Fragment, useEffect } from "react";
 
 import Home from "./routes/home/home.component";
 import Navigation from "./routes/navigation/navigation.component";
 import Authentication from "./routes/authentication/authentication.component";
 import Shop from "./routes/shop/shop.component";
 import Checkout from "./routes/checkout/checkout.component";
+import { useDispatch } from "react-redux";
+import { setUserInfo } from "./store/user/user.action";
+import { setCategories } from "./store/categories/categories.action";
+import { userAuthStateListener, createUserFromAuth, getCollectionAndDocuments } from "./utils/firebase/firebase.utils";
 
-import { ToastContainer } from "react-toastify";
-import { Fragment } from "react";
 
 const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+      const unsubscribe = userAuthStateListener((user) => {
+          if(user) createUserFromAuth(user);
+          dispatch(setUserInfo(user));
+      });
+
+      // useEffect with return will process the return method 
+      // when component is unmounted.
+      return unsubscribe;
+  },[]);
+
+  useEffect(() => {
+      const getCategoriesMap = async () => {
+          const categoryMap = await getCollectionAndDocuments();
+          dispatch(setCategories(categoryMap))
+      }
+
+      getCategoriesMap();
+  }, []);
 
   return (
     <Fragment>
