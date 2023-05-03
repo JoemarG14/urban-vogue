@@ -1,53 +1,9 @@
-import { createContext, useContext, useReducer} from "react";
+import { createContext, useState, useEffect, useContext} from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 import { UserContext } from "./user.context";
-import { createAction } from '../utils/reducer/reducer.utils'
-
-export const CartContext = createContext({
-    isOpen: false,
-    cartItems: [],
-    addItemToCart: () => {},
-    cartCount: 0,
-    toggleCartState: () => {},
-    closeCartPopUp: () => {},
-    decreaseQuantityFromCart: () => {},
-    total: 0,
-    removeItemFromCart: () => {}
-});
-
-export const INITIAL_STATE = {
-    isOpen: false,
-    cartItems: [],
-    cartCount: 0,
-    total: 0,
-}
-
-export const CART_ACTIONS = {
-    SET_IS_CART_OPEN: 'SET_IS_CART_OPEN',
-    ADD_TO_CART: 'ADD_TO_CART',
-}
-
-const cartReducer = (state, action) => {
-    const {type, payload} = action;
-
-    switch (type) {
-        case CART_ACTIONS.SET_IS_CART_OPEN:
-            return {
-                ...state,
-                isOpen: payload
-            }
-        case CART_ACTIONS.ADD_TO_CART:
-            return {
-                ...state,
-                ...payload
-            }
-        default:
-            throw new Error(`Unhandled type ${type} in isCartOpenReducer.`);
-    }
-}
 
 const addItem = (cartItems, productToAdd) => {
 
@@ -96,29 +52,40 @@ const toastAddedToCart = (name) => {
     });
 };
 
+export const CartContext = createContext({
+    isOpen: false,
+    cartItems: [],
+    addItemToCart: () => {},
+    cartCount: 0,
+    toggleCartState: () => {},
+    closeCartPopUp: () => {},
+    decreaseQuantityFromCart: () => {},
+    total: 0,
+    removeItemFromCart: () => {}
+});
+
 export const CartProvider = ({children}) => {
     const { userInfo } = useContext(UserContext);
     const navigate = useNavigate();
 
-    const [{isOpen, cartItems, cartCount, total}, dispatch] = useReducer(cartReducer, INITIAL_STATE);
+    const [isOpen, setIsOpen] = useState(false);
+    const [cartItems, setCartItems] = useState([]);
+    const [cartCount, setCartCount] = useState(0);
+    const [total, setTotal] = useState(0);
+    
+    useEffect(() => {
+        // For cart item total inside cart icon
+        const totalCartItem = cartItems.reduce((total, item) => total + item.quantity, 0)
+        setCartCount(totalCartItem);
 
-    const addToCartReducer = (newCartItems) => {
-        const totalCartItem = newCartItems.reduce((total, item) => total + item.quantity, 0);
-        const totalPrice = newCartItems.reduce((total, item) => total + (item.quantity * item.price), 0);
-
-        dispatch(createAction(CART_ACTIONS.ADD_TO_CART, {
-            cartItems: newCartItems,
-            cartCount: totalCartItem,
-            total: totalPrice
-        }));
-    }
-
-    const setIsOpen = (bool) => (dispatch(createAction(CART_ACTIONS.SET_IS_CART_OPEN, bool)))
+        // For checkout total of all items
+        const totalPrice = cartItems.reduce((total, item) => total + (item.quantity * item.price), 0)
+        setTotal(totalPrice);
+    }, [cartItems])
 
     const addItemToCart = (productToAdd, method = '') => {
         if (userInfo) {
-            const newCartItems = addItem(cartItems, productToAdd);
-            addToCartReducer(newCartItems);
+            setCartItems(addItem(cartItems, productToAdd));
             if(method !== 'INC')
                 toastAddedToCart(productToAdd.name);
         } else {
@@ -131,13 +98,11 @@ export const CartProvider = ({children}) => {
     }
 
     const decreaseQuantityFromCart = (productId) => {
-        const newCartItems = decreaseQuantity(cartItems, productId);
-        addToCartReducer(newCartItems);
+        setCartItems(decreaseQuantity(cartItems, productId));
     }
 
     const removeItemFromCart = (productId) => {
-        const newCartItems = removeItem(cartItems, productId);
-        addToCartReducer(newCartItems);
+        setCartItems(removeItem(cartItems, productId));
     }
 
     const toggleCartState = () => setIsOpen(!isOpen);
