@@ -68,13 +68,7 @@ export const getCollectionAndDocuments = async () => {
     const q= query(collectionRef);
 
     const querySnapshot = await getDocs(q);
-    const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
-        const { title, items, imageUrl } = docSnapshot.data();
-        acc[title.toLocaleLowerCase()] = {items, imageUrl};
-        return acc;
-    }, {})
-
-    return categoryMap;
+    return querySnapshot.docs.map((docSnapshot) => docSnapshot.data());
 }
 
 // function for saving user info thru sign in with google pop up
