@@ -1,13 +1,16 @@
 import { Fragment, useEffect, useState } from 'react';
-import { CategoryContainer, CategoryTitle } from './category.styles'
 import { useParams } from 'react-router-dom';
-import ProductCard from '../../components/product-card/product-card.component';
 import { useSelector } from 'react-redux';
-import { selectorCategories } from '../../store/categories/categories.selector';
+import ReactLoading from 'react-loading';
+
+import { CategoryContainer, CategoryTitle } from './category.styles'
+import ProductCard from '../../components/product-card/product-card.component';
+import { selectorCategories, selectorCategoriesLoading } from '../../store/categories/categories.selector';
 
 const Category = () => {
     const { category } = useParams();
     const categories = useSelector(selectorCategories);
+    const isLoading = useSelector(selectorCategoriesLoading);
     const [products, setProducts] = useState(categories[category]);
 
     useEffect(() => {
@@ -17,13 +20,19 @@ const Category = () => {
     return (
         <Fragment>
             <CategoryTitle>{category.toLocaleUpperCase()}</CategoryTitle>
-            <CategoryContainer>
-                {
-                    products && products.items.map((product) => {
-                        return <ProductCard key={product.id} product={product}/>
-                    })
-                }
-            </CategoryContainer>
+            {
+                isLoading ? (
+                    <ReactLoading type='bars' className='loading-bar' color="#636767" />
+                ) : (
+                    <CategoryContainer>
+                        {
+                            products && products.items.map((product) => {
+                                return <ProductCard key={product.id} product={product}/>
+                            })
+                        }
+                    </CategoryContainer>
+                )
+            }
         </Fragment>
     )
 }

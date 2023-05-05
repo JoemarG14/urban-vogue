@@ -9,8 +9,9 @@ import Shop from "./routes/shop/shop.component";
 import Checkout from "./routes/checkout/checkout.component";
 import { useDispatch } from "react-redux";
 import { setUserInfo } from "./store/user/user.action";
-import { setCategories } from "./store/categories/categories.action";
-import { userAuthStateListener, createUserFromAuth, getCollectionAndDocuments } from "./utils/firebase/firebase.utils";
+import { fetchCategoriesAsync } from "./store/categories/categories.action";
+import { userAuthStateListener, createUserFromAuth } from "./utils/firebase/firebase.utils";
+import { setIsOpen } from "./store/cart/cart.action";
 
 
 const App = () => {
@@ -28,12 +29,15 @@ const App = () => {
   },[]);
 
   useEffect(() => {
-      const getCategoriesMap = async () => {
-          const categoryMap = await getCollectionAndDocuments();
-          dispatch(setCategories(categoryMap))
-      }
+    dispatch(fetchCategoriesAsync());
+  }, []);
 
-      getCategoriesMap();
+  useEffect(() => {
+      if (window.performance) {
+        if (performance.navigation.type === 1) {
+          dispatch(setIsOpen(false));
+        }
+      }
   }, []);
 
   return (
