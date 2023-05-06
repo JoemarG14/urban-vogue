@@ -94,7 +94,7 @@ export const createUserFromAuth = async (userAuth, additionalInformation = {}) =
         }
     }
 
-    return userRef;
+    return userSnapShot;
 }
 
 // Initialize sign up thru email and password
@@ -116,3 +116,17 @@ export const signOutUser = async () => await signOut(auth);
 
 //check auth state of user
 export const userAuthStateListener = (callback) => onAuthStateChanged(auth, callback);
+
+//check auth state of user
+export const getCurrentUser = () => {
+    return new Promise((resolve, reject) => {
+        const unsubscribe = onAuthStateChanged(
+            auth,
+            (userAuth) => {
+                unsubscribe();
+                resolve(userAuth);
+            },
+            reject
+        )
+    })
+}

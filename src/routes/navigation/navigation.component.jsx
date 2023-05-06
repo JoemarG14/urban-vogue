@@ -18,6 +18,7 @@ import CartDropDown from "../../components/cart-dropdown/cart-dropdown.component
 import { selectorUserInfo } from "../../store/user/user.selector";
 import { selectorIsOpen } from "../../store/cart/cart.selector";
 import { setIsOpen } from "../../store/cart/cart.action";
+import { signOutStart } from "../../store/user/user.action";
 
 const Navigation = () => {
     const dispatch = useDispatch();
@@ -29,9 +30,7 @@ const Navigation = () => {
     const closeCartPopUp = () => dispatch(setIsOpen(false))
 
     const signOuthandler = async () => {
-        await signOutUser();
-        navigate('/auth');
-        closeCartPopUp();
+        dispatch(signOutStart(navigate, closeCartPopUp))
     }
 
     return (

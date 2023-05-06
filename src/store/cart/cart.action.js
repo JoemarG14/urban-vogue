@@ -61,8 +61,7 @@ export const addItemToCart = (cartItems, productToAdd, method = '', navigate, us
         return createAction(CART_ACTIONS.ADD_TO_CART, newCartItems);
     } else {
         toast('Sign in first to add items to your cart.', {
-            position: toast.POSITION.BOTTOM_RIGHT,
-            autoClose: 3000
+            position: toast.POSITION.BOTTOM_RIGHT
         });
         navigate('/auth');
         return createAction('', []);

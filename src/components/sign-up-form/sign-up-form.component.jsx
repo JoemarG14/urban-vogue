@@ -4,9 +4,10 @@ import { toast } from "react-toastify";
 
 import { SignUpContainer } from './sign-up-form.styles'
 
-import { signUpWithEmailAndPassword, createUserFromAuth } from '../../utils/firebase/firebase.utils'
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
+import { useDispatch } from "react-redux";
+import { signUpStart } from "../../store/user/user.action";
 
 const defaultFormFields = {
     displayName: '',
@@ -20,6 +21,7 @@ const SignUpForm = () => {
     const [formFields, setFormFields] = useState(defaultFormFields);
     const { displayName, email, password, confirmPassword } = formFields;
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const resetFormFields = () => {
         setFormFields(defaultFormFields);
@@ -35,62 +37,15 @@ const SignUpForm = () => {
         e.preventDefault();
 
         if(password === confirmPassword) {
-            try {
-
-                toast.promise(
-                    async () => { 
-                        const { user } = await signUpWithEmailAndPassword(email, password);
-                        return await createUserFromAuth(user, {displayName}); 
-                    },
-                    {
-                        pending: 'Creating account',
-                        success: {
-                          render(){
-                              navigate('/');
-                              resetFormFields();
-                              return 'Account successfully created';
-                          }
-                        },
-                        error: {
-                            render({data}){
-                                switch (data.code) {
-                                    case 'auth/email-already-in-use':
-                                        return 'Email is already registered.'
-                                    default:
-                                        console.log(data.message);
-                                }
-                            }
-                        }
-                    }, {
-                        position: toast.POSITION.BOTTOM_RIGHT
-                    }
-                )
-
-            } catch (err) {
-                console.log('Encountered an error while saving the account.', err);
-            }
-            
+            dispatch(signUpStart(email, password, { displayName }, navigate, resetFormFields))
         } else {
-            alert('password does not match');
+            toast.success(`Password does not match.`, {
+                position: toast.POSITION.BOTTOM_RIGHT
+            });
             return;
         }
 
     }
-
-    // const validate = (value) => {
- 
-    //     if (validator.isStrongPassword(value, {
-    //         minLength: 8, minLowercase: 1,
-    //         minUppercase: 1, minNumbers: 1, minSymbols: 1
-    //     })) {
-    //         setErrorMessage('Is Strong Password');
-    //         return true;
-    //     } else {
-    //         setErrorMessage('Is Strong Password');
-    //         return false;
-    //     }
-    
-    // }
 
     return (
         <SignUpContainer>

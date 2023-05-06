@@ -8,9 +8,8 @@ import Authentication from "./routes/authentication/authentication.component";
 import Shop from "./routes/shop/shop.component";
 import Checkout from "./routes/checkout/checkout.component";
 import { useDispatch } from "react-redux";
-import { setUserInfo } from "./store/user/user.action";
-import { fetchCategoriesAsync } from "./store/categories/categories.action";
-import { userAuthStateListener, createUserFromAuth } from "./utils/firebase/firebase.utils";
+import { checkUserSession } from "./store/user/user.action";
+import { fetchCategoriesStart } from "./store/categories/categories.action";
 import { setIsOpen } from "./store/cart/cart.action";
 
 
@@ -18,18 +17,11 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-      const unsubscribe = userAuthStateListener((user) => {
-          if(user) createUserFromAuth(user);
-          dispatch(setUserInfo(user));
-      });
-
-      // useEffect with return will process the return method 
-      // when component is unmounted.
-      return unsubscribe;
+      dispatch(checkUserSession())
   },[]);
 
   useEffect(() => {
-    dispatch(fetchCategoriesAsync());
+    dispatch(fetchCategoriesStart());
   }, []);
 
   useEffect(() => {
